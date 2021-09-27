@@ -10,11 +10,13 @@
 
         <x-table>
 
-            <div class="px-6 py-4">
+            <div class="px-6 py-4 flex items-center">
                 <!--<input type="text" wire:model="search">-->
 
-                <x-jet-input class="w-full" type="text" placeholder="Busqueda" :disabled="false"
+                <x-jet-input class="flex-1 mr-4" type="text" placeholder="Busqueda" :disabled="false"
                     wire:model="search"></x-jet-input>
+
+                @livewire('create-post')
             </div>
 
             @if ($posts->count())
@@ -72,16 +74,16 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($posts as $post)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4">
                                     <div class="text-sm text-gray-900">{{ $post->id }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4">
                                     <div class="text-sm text-gray-900">{{ $post->title }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4">
                                     <div class="text-sm text-gray-900">{{ $post->content }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 text-right text-sm font-medium">
                                     <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                 </td>
                             </tr>
