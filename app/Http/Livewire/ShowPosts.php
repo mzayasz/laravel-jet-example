@@ -6,10 +6,12 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class ShowPosts extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $search, $post, $image, $identificador;
 
@@ -30,12 +32,17 @@ class ShowPosts extends Component
         $this->post = new Post();
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $posts = Post::where('title', 'like', "%$this->search%")
                     ->orWhere('content', 'like', "%$this->search%")
                     ->orderBy($this->sort, $this->direction)
-                    ->get();
+                    ->paginate(5);
 
         return view('livewire.show-posts', compact('posts'));
     }
