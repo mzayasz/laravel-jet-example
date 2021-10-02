@@ -34,7 +34,7 @@ class ShowPosts extends Component
         'post.content' => 'required'
     ];
 
-    protected $listeners = ['render-show-posts' => 'render'];
+    protected $listeners = ['render-show-posts' => 'render', 'delete'];
 
     public function mount(){
         $this->identificador = rand();
@@ -98,4 +98,10 @@ class ShowPosts extends Component
         //$this->emitTo('show-posts', 'render-show-posts');
         $this->emit('alert', 'El post se actualizo satisfactoriamente');
     }
+
+    public function delete(Post $post)
+    {
+        $post->delete();
+    }
+
 }

@@ -14,14 +14,14 @@
                 <!--<input type="text" wire:model="search">-->
 
                 <div class="flex items-center">
-                     <span>Mostrar</span>
-                     <select class="mx-2 form-control" wire:model="count">
-                         <option value="10">10</option>
-                         <option value="25">25</option>
-                         <option value="50">50</option>
-                         <option value="100">100</option>
-                     </select>
-                     <span>entradas</span>
+                    <span>Mostrar</span>
+                    <select class="mx-2 form-control" wire:model="count">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>entradas</span>
                 </div>
 
                 <x-jet-input class="flex-1 mx-4" type="text" placeholder="Busqueda" :disabled="false"
@@ -51,7 +51,7 @@
                             <th wire:click="order('title')" scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
                                 Title
-                                
+
                                 <!-- sort -->
                                 @if ($sort == 'title')
                                     @if ($direction == 'asc')
@@ -94,9 +94,13 @@
                                 <td class="px-6 py-4">
                                     <div class="text-sm text-gray-900">{{ $item->content }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-sm font-medium">
-                                    <a class="btn btn-green" wire:click="edit({{$item}})">
+                                <td class="px-6 py-4 text-sm font-medium flex">
+                                    <a class="btn btn-green" wire:click="edit({{ $item }})">
                                         <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a class="btn btn-red ml-2" wire:click="$emit('deletePost', {{ $item->id }})">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -108,7 +112,7 @@
 
                 @if ($posts->hasPages())
                     <div class="px-6 py-3">
-                        {{$posts->links()}}
+                        {{ $posts->links() }}
                     </div>
                 @endif
 
@@ -125,10 +129,12 @@
     <!-- MODAL PARA EDITAR LOS POSTS -->
     <x-jet-dialog-modal wire:model="open_edit">
         <x-slot name="title">
-            Editar post <span class="font-bold">{{$post->title}}</span>
+            Editar post <span class="font-bold">{{ $post->title }}</span>
         </x-slot>
         <x-slot name="content">
-            <div wire:loading wire:target="post.image" class="mb-4 w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <div wire:loading wire:target="post.image"
+                class="mb-4 w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert">
                 <strong class="font-bold">Imagen cargando!</strong>
                 <span class="block sm:inline">Espere un momento.</span>
             </div>
@@ -136,7 +142,7 @@
             @if ($image)
                 <img class="mb-4" src="{{ $image->temporaryUrl() }}">
             @else
-                <img src="{{Storage::url($post->image)}}" alt="">
+                <img src="{{ Storage::url($post->image) }}" alt="">
             @endif
 
             <div class="mb-4">
@@ -163,6 +169,34 @@
     </x-jet-dialog-modal>
 
 
-  
+    @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            Livewire.on('deletePost', postId => {
+                Swal.fire({
+                    title: 'Estás seguro?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Livewire.emitTo('show-posts', 'delete', postId);
+
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                })
+            })
+        </script>
+    @endpush
+
 
 </div>
