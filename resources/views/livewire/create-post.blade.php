@@ -24,9 +24,16 @@
                 <x-jet-input type="text" class="w-full" wire:model="title"></x-jet-input>
                 <x-jet-input-error for="title"></x-jet-input-error>
             </div>
-            <div class="mb-4">
+            
+            <div class="mb-4" wire:ignore>
                 <x-jet-label value="Contenido"></x-jet-label>
-                <textarea class="form-control w-full" cols="30" rows="6" wire:model="content"></textarea>
+                
+                <textarea id="editor" 
+                    class="form-control w-full" 
+                    rows="6" 
+                    wire:model="content">
+                </textarea>
+
                 <x-jet-input-error for="content"></x-jet-input-error>
             </div>
 
@@ -49,5 +56,22 @@
 
         </x-slot>
     </x-jet-dialog-modal>
+
+    @push('js')
+        <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+
+        <script>
+            ClassicEditor
+                .create( document.querySelector( '#editor' ) )
+                .then(function(editor){
+                    editor.model.document.on('change:data',() => {
+                       @this.set('content', editor.getData());
+                    })
+                })
+                .catch( error => {
+                    console.error( error );
+                } );
+        </script>
+    @endpush
 
 </div>

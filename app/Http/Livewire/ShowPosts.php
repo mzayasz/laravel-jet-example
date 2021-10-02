@@ -14,14 +14,13 @@ class ShowPosts extends Component
     use WithPagination;
 
     public $post, $image, $identificador;
-    
     public $search = '';
     public $sort = 'id';
     public $direction = 'desc';
-
     public $open_edit = false;
-
     public $count = '10';
+
+    public $readyToLoad = false;
 
     protected $queryString = [
         'count' => ['except' => '10'], 
@@ -49,12 +48,21 @@ class ShowPosts extends Component
 
     public function render()
     {
-        $posts = Post::where('title', 'like', "%$this->search%")
+        if($this->readyToLoad){
+            $posts = Post::where('title', 'like', "%$this->search%")
                     ->orWhere('content', 'like', "%$this->search%")
                     ->orderBy($this->sort, $this->direction)
                     ->paginate($this->count);
-
+        }else{
+            $posts = [];
+        }
+       
         return view('livewire.show-posts', compact('posts'));
+    }
+
+    public function loadPosts()
+    {
+        $this->readyToLoad = true;
     }
 
     public function order($sort)
