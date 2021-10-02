@@ -13,7 +13,18 @@
             <div class="px-6 py-4 flex items-center">
                 <!--<input type="text" wire:model="search">-->
 
-                <x-jet-input class="flex-1 mr-4" type="text" placeholder="Busqueda" :disabled="false"
+                <div class="flex items-center">
+                     <span>Mostrar</span>
+                     <select class="mx-2 form-control" wire:model="count">
+                         <option value="10">10</option>
+                         <option value="25">25</option>
+                         <option value="50">50</option>
+                         <option value="100">100</option>
+                     </select>
+                     <span>entradas</span>
+                </div>
+
+                <x-jet-input class="flex-1 mx-4" type="text" placeholder="Busqueda" :disabled="false"
                     wire:model="search"></x-jet-input>
 
                 @livewire('create-post')
